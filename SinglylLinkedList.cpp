@@ -170,9 +170,26 @@ public:
         return -1;
     }
 
-    // void revers(){
-
-    // }
+    void reverse(){
+        int len=getLength();
+        if (len==0){
+            cout << "Empty list" << endl;
+        }else if (len==1){
+            cout << "list has onle one element (Already reversed)" << endl;
+        }else{
+            Node *current = Head;
+            Node *prev = NULL;
+            Node *next = NULL;
+            while (current != NULL) {
+                next = current->Next;
+                current->Next = prev;
+                prev = current;
+                current = next;
+            }
+        Tail = Head; // Updating Tail to the previous Head
+        Head = prev; // Setting the new Head
+        }
+    }
 
     void traverse(){
         if (Head == NULL){
@@ -206,5 +223,11 @@ int main(){
     cout<<list.getLength()<<endl;
     cout<<list.find(10)<<endl;
     cout<<list.find(0)<<endl;
+    list.insertLast(5);
+    list.insertLast(6);
+    
+    list.reverse();
+    list.traverse();
+    
     return 0;
 }

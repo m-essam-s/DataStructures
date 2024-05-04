@@ -141,7 +141,6 @@ public:
         return len;
     }
     void atPos(int Pos){
-        
         if (Pos==0){
             cout<<Head->Data<<endl; 
         }else if (Pos==this->getLength()-1){

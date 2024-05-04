@@ -20,28 +20,30 @@ public:
     }
 
     void insertFirst(int element){
-
         Node *newNode = new Node;  
         newNode->Data = element; 
-
-        newNode->Next = Head; 
-        Head = newNode; 
-
-        if (Tail == NULL) 
-            Tail = newNode; 
-        
+        if (Head == NULL){
+            Head = newNode;
+            Tail = newNode; // Update Tail to point to the new node
+            newNode->Next = Head;
+        } else {
+            newNode->Next = Head;
+            Tail->Next = newNode;
+            Head = newNode;
+        }
         Length++;
     }
 
     void insertLast(int element){
 
-        Node *newNode = new Node;
-        newNode->Data = element;
-        newNode->Next = NULL;
-
+        Node *newNode = new Node;  
+        newNode->Data = element; 
         if (Head == NULL){
-            Head = Tail = newNode;
+            Head = newNode;
+            Tail = newNode; // Update Tail to point to the new node
+            newNode->Next = Head;
         } else {
+            newNode->Next = Head;
             Tail->Next = newNode;
             Tail = newNode;
         }
@@ -49,20 +51,20 @@ public:
     }
 
     void insertAtPos(int element, int Pos){
-        if (Pos==0){
+        if (Pos == 0){
             insertFirst(element);
-        }else if (Pos==Length) {
+        } else if (Pos == Length) {
             insertLast(element);
-        }else if (Pos>Length){
-            cout<<"Position out of range"<<endl;
-        }else{
+        } else if (Pos > Length){
+            cout << "Position out of range" << endl;
+        } else {
             Pos--; // Adjusting position to match zero-based indexing
             Node *newNode = new Node;
             newNode->Data = element;
-            
+
             Node *Temp = Head;
-            while (Pos--){
-                Temp=Temp->Next;
+            while (Pos--) { // Change to while (Pos--) to decrement Pos once per iteration
+                Temp = Temp->Next;
             }
             newNode->Next = Temp->Next;
             Temp->Next = newNode;
@@ -71,58 +73,56 @@ public:
         }         
     }
 
-    void removeFirst(){
-        if (Head==NULL){
-            cout<<"The list is aready empty\n";
-        }else if (Head==Tail){
+    void removeFirst() {
+        if (Head == NULL) {
+            cout << "The list is already empty\n";
+        } else if (Head == Tail) {
             delete Head;
             Head = Tail = NULL;
-
             Length--;
-        }else{
-            Node *Temp = Head;
-            Head = Head->Next;
-            delete Temp;
-            
+        } else {
+            Tail->Next = Head->Next;
+            delete Head;
+            Head = Tail->Next;
+
             Length--;
         }
     }
 
     void removeLast(){
-        if (Tail==NULL){
-            cout<<"The list is aready empty\n";
-        }else if (Tail==Head){
+        if (Tail == NULL){
+            cout << "The list is already empty\n";
+        } else if (Tail == Head){
             delete Tail;
             Tail = Head = NULL;
             Length--;
-        }else{
+        } else {
             Node *Temp = Head;
-            
-            while (Temp->Next!=Tail){
-                Temp=Temp->Next;
+            while (Temp->Next != Tail){
+                Temp = Temp->Next;
             }
 
             delete Tail;
-            Tail=Temp;
-            Tail->Next=NULL;
+            Tail = Temp;
+            Tail->Next = Head; // Update the new last node's Next pointer to point to Head
 
             Length--;
         }
     }
     
-    void removeAtPos(int Pos){
-       if (Pos==0){
+        void removeAtPos(int Pos){
+        if (Pos == 0){
             removeFirst();
-        }else if (Pos == Length - 1) {
+        } else if (Pos == Length - 1) {
             removeLast();
-        }else if (Pos >= Length){
-            cout<<"Position out of range"<<endl;
-        }else{
+        } else if (Pos >= Length){
+            cout << "Position out of range" << endl;
+        } else {
             Pos--; // Adjusting position to match zero-based indexing
-            
+
             Node *Temp = Head;
-            while (Pos--){
-                Temp=Temp->Next;
+            while (Pos--) { // Change to while (Pos--) to decrement Pos once per iteration
+                Temp = Temp->Next;
             }
             Node *ToDelete = Temp->Next;
             Temp->Next = Temp->Next->Next;
@@ -131,78 +131,84 @@ public:
         }        
     }
 
-    int getLength(){
-        int len=0;
+    int getLength() {
+        if (Head == NULL) {
+            return 0; // Empty list
+        }
+
+        int len = 0;
         Node *currentNode = Head;
-        while (currentNode!= NULL){
+        do {
             len++;
             currentNode = currentNode->Next;
-        }
+        } while (currentNode != Head);
+
         return len;
     }
+
     void atPos(int Pos){
-        
-        if (Pos==0){
-            cout<<Head->Data<<endl; 
-        }else if (Pos==this->getLength()-1){
-            cout<<Tail->Data<<endl;
-        }else if (Pos>=this->getLength()){
-            cout<<"Position out of range"<<endl;
-        }else{
+        if (Pos == 0){
+            cout << Head->Data << endl; 
+        } else if (Pos == this->getLength()) {
+            cout << Tail->Data << endl;
+        } else if (Pos >= this->getLength()) {
+            cout << "Position out of range" << endl;
+        } else {
             Node *Temp = Head;
-            while (Pos--){
-                Temp=Temp->Next;
+            while (Pos--) {
+                Temp = Temp->Next;
             }
-            cout<<Temp->Data<<endl;
+            cout << Temp->Data << endl;
         }
     }
 
     int find(int element){
-        Node *Temp=Head;
-        int index=0;
-        while (Temp!=NULL){
-            if (Temp->Data==element){
+        Node *Temp = Head;
+        int index = 0;
+        do {
+            if (Temp->Data == element) {
                 return index; 
             }
-            Temp=Temp->Next;
+            Temp = Temp->Next;
             index++;
-        }
+        } while (Temp != Head); // Loop until we reach the Head again, completing a full traversal
         return -1;
     }
 
-    void reverse(){
-        int len=getLength();
-        if (len==0){
+    void reverse() {
+        int len = getLength();
+        if (len == 0) {
             cout << "Empty list" << endl;
-        }else if (len==1){
-            cout << "list has onle one element (Already reversed)" << endl;
-        }else{
+        } else if (len == 1) {
+            cout << "List has only one element (Already reversed)" << endl;
+        } else {
             Node *current = Head;
-            Node *prev = NULL;
+            Node *pre = NULL;
             Node *next = NULL;
             while (current != NULL) {
                 next = current->Next;
-                current->Next = prev;
-                prev = current;
+                current->Next = pre;
+                pre = current;
                 current = next;
             }
-        Tail = Head; // Updating Tail to the previous Head
-        Head = prev; // Setting the new Head
+            Tail = Head; // Update Tail to the previous Head
+            Head = pre; // Set the new Head
         }
     }
 
-    void traverse(){
-        if (Head == NULL){
+    void traverse() {
+        if (Head == NULL) {
             cout << "List is empty" << endl;
             return;
         }
         Node *currentNode = Head;
-        while (currentNode->Next != NULL){
+        do {
             cout << currentNode->Data << " -> ";
             currentNode = currentNode->Next;
-        }
+        } while (currentNode != Tail);
         cout << Tail->Data << endl;
-    }
+        
+}
 };
 
 int main(){
@@ -214,20 +220,17 @@ int main(){
     }
     
     list.traverse();
-    list.insertAtPos(100,3);
-    list.traverse();
+    list.removeFirst();
+    list.removeLast();
+    list.insertFirst(0);
+    list.insertLast(9);
     list.removeAtPos(3);
+    list.insertAtPos(3,3);
     list.traverse();
-    list.atPos(8);
-    
+    list.atPos(3);
     cout<<list.getLength()<<endl;
+    cout<<list.find(9)<<endl;
     cout<<list.find(10)<<endl;
-    cout<<list.find(0)<<endl;
-    list.insertLast(5);
-    list.insertLast(6);
-    
-    list.reverse();
-    list.traverse();
     
     return 0;
 }

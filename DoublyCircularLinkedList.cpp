@@ -1,9 +1,9 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-class DounlyCircularLinkedList{
+class DounlyCircularLinkedList {
 private:
-    class Node{
+    class Node {
     public:
         int Data;
         Node* Next;
@@ -15,40 +15,40 @@ private:
     int Length;
 
 public:    
-    DounlyCircularLinkedList(){
+    DounlyCircularLinkedList() {
         Head = Tail = NULL;
-        Length = 0;
+        Length = 0; 
     }
 
     void insertFirst(int element) {
         Node *newNode = new Node;  
         newNode->Data = element; 
-        newNode->Next = Head;
-        newNode->Prev = NULL; 
-        
-        if (Head != NULL) {
-            Head->Prev = newNode;
-        } else {
-            // If the list was empty, newNode is both Head and Tail
-            Tail = newNode;
-        }
-    
-        Head = newNode; 
-        Length++;
-}
-
-    void insertLast(int element) {
-
-        Node *newNode = new Node;
-        newNode->Data = element;
-        newNode->Next = NULL;
+        newNode->Next = newNode->Prev = newNode;
 
         if (Head == NULL) {
             Head = Tail = newNode;
-            newNode->Prev=NULL;
         } else {
-            newNode->Prev=Tail;
+            newNode->Next = Head;
+            newNode->Prev = Tail;
+            Head->Prev = newNode;
             Tail->Next = newNode;
+            Head = newNode;
+        }
+        Length++;
+    }
+
+    void insertLast(int element) {
+        Node *newNode = new Node;
+        newNode->Data = element;
+        newNode->Next = newNode->Prev = newNode;
+
+        if (Head == NULL) {
+            Head = Tail = newNode;
+        } else {
+            newNode->Next = Head;
+            newNode->Prev = Tail;
+            Tail->Next = newNode;
+            Head->Prev = newNode;
             Tail = newNode;
         }
         Length++;
@@ -62,7 +62,8 @@ public:
         } else if (Pos > Length || Pos < 0) {
             cout << "Position out of range" << endl;
         } else {
-            Pos--; // Adjusting position to match zero-based indexing
+            // Adjust position to match zero-based indexing
+            Pos--;
             Node *newNode = new Node;
             newNode->Data = element;
 
@@ -70,6 +71,7 @@ public:
             while (Pos--) {
                 Temp = Temp->Next;
             }
+            // Insert the new node at the specified position
             newNode->Next = Temp->Next;
             Temp->Next->Prev = newNode;
             newNode->Prev = Temp;
@@ -79,144 +81,122 @@ public:
         }
     }
 
-    void removeFirst(){
-        if (Head==NULL){
-            cout<<"The list is aready empty\n";
-        }else if (Head==Tail){
+    void removeFirst() {
+        if (Head == NULL) {
+            cout << "The list is already empty\n";
+        } else if (Head == Tail) {
             delete Head;
             Head = Tail = NULL;
-
-            Length--;
-        }else {
+        } else {
             Node *Temp = Head;
             Head = Head->Next;
-            if (Head != NULL) {
-                Head->Prev = NULL;
-            } else {
-                // If Head->Next is NULL, Head is now the only node in the list
-                Tail = NULL;
-            }
+            Head->Prev = Tail;
+            Tail->Next = Head;
             delete Temp;
-            Length--;
         }
+        Length--;
     }
 
-    void removeLast(){
-        if (Tail==NULL){
-            cout<<"The list is aready empty\n";
-        }else if (Tail==Head){
+    void removeLast() {
+        if (Tail == NULL) {
+            cout << "The list is already empty\n";
+        } else if (Head == Tail) {
             delete Tail;
-            Tail = Head = NULL;
-            Length--;
-        }else{
+            Head = Tail = NULL;
+            Length = 0;
+        } else {
             Node *Temp = Tail;
             Tail = Tail->Prev;
-            if (Tail != NULL) {
-                Tail->Next = NULL;
-            }else{
-                // If Tail->Prev is NULL, Tail is now the only node in the list
-                Head = NULL;
-            }       
+            Tail->Next = Head;
+            Head->Prev = Tail;
             delete Temp;
-
             Length--;
         }
     }
     
-    void removeAtPos(int Pos){
-       if (Pos==0){
+    void removeAtPos(int Pos) {
+        if (Pos == 0) {
             removeFirst();
-        }else if (Pos == Length - 1) {
+        } else if (Pos == Length - 1) {
             removeLast();
-        }else if (Pos>Length || Pos<0){
-            cout<<"Position out of range"<<endl;
-        }else{
-            Pos--; // Adjusting position to match zero-based indexing
-            
+        } else if (Pos >= Length || Pos < 0) {
+            cout << "Position out of range" << endl;
+        } else {
+            // Adjusting position to match zero-based indexing
+            Pos--;
+
             Node *Temp = Head;
-            while (Pos--){
-                Temp=Temp->Next;
+            while (Pos--) {
+                Temp = Temp->Next;
             }
 
             Node *ToDelete = Temp->Next;
-            Temp->Next = Temp->Next->Next;
+            Temp->Next = ToDelete->Next;
+            ToDelete->Next->Prev = Temp;
 
-            if (Temp->Next != NULL) {
-                Temp->Next->Prev = Temp;
-            } else {
-                // If the next node is NULL, the deleted node was the previous Tail
-                Tail = Temp;
-            }
-            
             delete ToDelete;
             Length--;
-        }        
-    }
-
-    int getLength(){
-        int len=0;
-        Node *currentNode = Head;
-        while (currentNode!= NULL){
-            len++;
-            currentNode = currentNode->Next;
-        }
-        return len;
-    }
-
-    void atPos(int Pos){
-        
-        if (Pos==0){
-            cout<<Head->Data<<endl; 
-        }else if (Pos==this->getLength()-1){
-            cout<<Tail->Data<<endl;
-        }else if (Pos>=this->getLength()){
-            cout<<"Position out of range"<<endl;
-        }else{
-            Node *Temp = Head;
-            while (Pos--){
-                Temp=Temp->Next;
-            }
-            cout<<Temp->Data<<endl;
         }
     }
 
-    int find(int element){
-        Node *Temp=Head;
-        int index=0;
-        while (Temp!=NULL){
-            if (Temp->Data==element){
-                return index; 
+    int getLength() {
+        return Length;
+    }
+
+    int find(int element) {
+        if (Head == NULL) {
+            return -1;
+        }
+
+        Node *Temp = Head;
+        int index = 0;
+        do {
+            if (Temp->Data == element) {
+                return index;
             }
-            Temp=Temp->Next;
+            Temp = Temp->Next;
             index++;
-        }
+        } while (Temp != Head);
+
         return -1;
     }
 
-    void traverseForward(){
-        if (Head == NULL){
+    void atPos(int Pos) {
+        if (Pos < 0 || Pos >= Length) {
+            cout << "Position out of range" << endl;
+            return;
+        }
+
+        Node *Temp = Head;
+        for (int i = 0; i < Pos; i++) {
+            Temp = Temp->Next;
+        }
+        cout << Temp->Data << endl;
+    }
+
+    void traverseForward() {
+        if (Head == NULL) {
             cout << "List is empty" << endl;
             return;
         }
         Node *currentNode = Head;
-        while (currentNode->Next != NULL){
+        do {
             cout << currentNode->Data << " -> ";
             currentNode = currentNode->Next;
-        }
+        } while (currentNode->Next != Head);
         cout << Tail->Data << endl;
     }
 
-    void traverseBackward(){
-        if (Head == NULL){
+    void traverseBackward() {
+        if (Head == NULL) {
             cout << "List is empty" << endl;
             return;
         }
-
         Node *currentNode = Tail;
-        while (currentNode->Prev != NULL){
+        do {
             cout << currentNode->Data << " -> ";
             currentNode = currentNode->Prev;
-        }
+        } while (currentNode->Prev!= Tail);
         cout << Head->Data << endl;
     }
 };
@@ -230,35 +210,18 @@ int main(){
     }
     
     list.traverseForward();
-    list.insertAtPos(100,3);
-    list.traverseForward();
-    list.removeAtPos(3);
-    list.traverseForward();
-    list.atPos(8);
-    
-    cout<<list.getLength()<<endl;
-    cout<<list.find(10)<<endl;
-    cout<<list.find(0)<<endl;
-    list.insertLast(5);
-    list.insertLast(6);
-    
-    list.traverseForward();
-
-    list.insertFirst(5);
-    list.insertFirst(6);
-    list.insertFirst(7);
-    list.insertFirst(3);
-    list.insertLast(99);
-    list.insertLast(100);
     list.removeFirst();
-    list.insertFirst(3);
     list.removeLast();
-    list.insertLast(99);
+    list.insertFirst(0);
+    list.insertLast(9);
+    list.removeAtPos(3);
+    list.insertAtPos(3,3);
     list.traverseForward();
     list.traverseBackward();
-    list.atPos(5);
-    cout<<list.find(99)<<endl;
+    list.atPos(3);
+    cout<<list.getLength()<<endl;
+    cout<<list.find(9)<<endl;
+    cout<<list.find(10)<<endl;
 
-    
     return 0;
 }

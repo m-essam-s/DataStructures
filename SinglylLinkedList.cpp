@@ -155,9 +155,25 @@ public:
             }
             cout<<Temp->Data<<endl;
         }
-        
-        
     }
+
+    int find(int element){
+        Node *Temp=Head;
+        int index=0;
+        while (Temp!=NULL){
+            if (Temp->Data==element){
+                return index; 
+            }
+            Temp=Temp->Next;
+            index++;
+        }
+        return -1;
+    }
+
+    // void revers(){
+
+    // }
+
     void traverse(){
         if (Head == NULL){
             cout << "List is empty" << endl;
@@ -188,5 +204,7 @@ int main(){
     list.atPos(8);
     
     cout<<list.getLength()<<endl;
+    cout<<list.find(10)<<endl;
+    cout<<list.find(0)<<endl;
     return 0;
 }

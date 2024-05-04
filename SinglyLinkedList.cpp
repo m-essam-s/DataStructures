@@ -171,12 +171,12 @@ public:
     }
 
     void reverse(){
-        int len=getLength();
-        if (len==0){
+        int len = getLength();
+        if (len == 0){
             cout << "Empty list" << endl;
-        }else if (len==1){
+        } else if (len == 1) {
             cout << "list has onle one element (Already reversed)" << endl;
-        }else{
+        } else {
             Node *current = Head;
             Node *prev = NULL;
             Node *next = NULL;
@@ -191,8 +191,8 @@ public:
         }
     }
 
-    void traverse(){
-        if (Head == NULL){
+    void traverse() {
+        if (Head == NULL) {
             cout << "List is empty" << endl;
             return;
         }
@@ -214,20 +214,17 @@ int main(){
     }
     
     list.traverse();
-    list.insertAtPos(100,3);
-    list.traverse();
+    list.removeFirst();
+    list.removeLast();
+    list.insertFirst(0);
+    list.insertLast(9);
     list.removeAtPos(3);
+    list.insertAtPos(3,3);
     list.traverse();
-    list.atPos(8);
-    
+    list.atPos(3);
     cout<<list.getLength()<<endl;
+    cout<<list.find(9)<<endl;
     cout<<list.find(10)<<endl;
-    cout<<list.find(0)<<endl;
-    list.insertLast(5);
-    list.insertLast(6);
-    
-    list.reverse();
-    list.traverse();
     
     return 0;
 }

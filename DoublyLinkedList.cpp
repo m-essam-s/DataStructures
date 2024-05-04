@@ -230,35 +230,18 @@ int main(){
     }
     
     list.traverseForward();
-    list.insertAtPos(100,3);
-    list.traverseForward();
-    list.removeAtPos(3);
-    list.traverseForward();
-    list.atPos(8);
-    
-    cout<<list.getLength()<<endl;
-    cout<<list.find(10)<<endl;
-    cout<<list.find(0)<<endl;
-    list.insertLast(5);
-    list.insertLast(6);
-    
-    list.traverseForward();
-
-    list.insertFirst(5);
-    list.insertFirst(6);
-    list.insertFirst(7);
-    list.insertFirst(3);
-    list.insertLast(99);
-    list.insertLast(100);
     list.removeFirst();
-    list.insertFirst(3);
     list.removeLast();
-    list.insertLast(99);
+    list.insertFirst(0);
+    list.insertLast(9);
+    list.removeAtPos(3);
+    list.insertAtPos(3,3);
     list.traverseForward();
     list.traverseBackward();
-    list.atPos(5);
-    cout<<list.find(99)<<endl;
+    list.atPos(3);
+    cout<<list.getLength()<<endl;
+    cout<<list.find(9)<<endl;
+    cout<<list.find(10)<<endl;
 
-    
     return 0;
 }
